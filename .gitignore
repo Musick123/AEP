@@ -2,6 +2,12 @@
 game/cache/
 game/saves/
 
+# Ignore these files
+dialogue.tab
+errors.txt
+log.txt
+traceback.txt
+
 
 # Compiled source #
 ###################
