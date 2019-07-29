@@ -1,38 +1,28 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 64, in script
-    $ path = get_shortest_path('church_gate')
-  File "game/script.rpy", line 64, in <module>
-    $ path = get_shortest_path('church_gate')
-  File "game/locations.rpy", line 588, in get_shortest_path
-    for k in eh.location }
-  File "game/locations.rpy", line 588, in <dictcomp>
-    for k in eh.location }
-  File "game/lib/053_event_events_base.rpy", line 194, in __getattr__
-    return super(BaseEvent, self).__getattribute__(key)
-AttributeError: 'LocationEvent' object has no attribute 'name'
+  File "game/events/location.rpy", line 240, in script call
+    label theater_south_2:
+  File "game/events_code/location_code.rpy", line 96, in script
+    silent_stan "Entered: [current_location_title!q]{nw}"
+  File "game/events_code/location_code.rpy", line 23, in silent_stan_text_filter
+    print("Filter {}:{}".format(renpy.substitute(s), previous.what))
+AttributeError: 'NoneType' object has no attribute 'what'
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 64, in script
-    $ path = get_shortest_path('church_gate')
-  File "C:\renpy-7.3.0-sdk\renpy\ast.py", line 912, in execute
-    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "C:\renpy-7.3.0-sdk\renpy\python.py", line 2004, in py_exec_bytecode
-    exec bytecode in globals, locals
-  File "game/script.rpy", line 64, in <module>
-    $ path = get_shortest_path('church_gate')
-  File "game/locations.rpy", line 588, in get_shortest_path
-    for k in eh.location }
-  File "game/locations.rpy", line 588, in <dictcomp>
-    for k in eh.location }
-  File "game/lib/053_event_events_base.rpy", line 194, in __getattr__
-    return super(BaseEvent, self).__getattribute__(key)
-AttributeError: 'LocationEvent' object has no attribute 'name'
+  File "game/events/location.rpy", line 240, in script call
+    label theater_south_2:
+  File "game/events_code/location_code.rpy", line 96, in script
+    silent_stan "Entered: [current_location_title!q]{nw}"
+  File "C:\renpy-7.3.0-sdk\renpy\ast.py", line 687, in execute
+    what = renpy.config.say_menu_text_filter(what)  # E1102
+  File "game/events_code/location_code.rpy", line 23, in silent_stan_text_filter
+    print("Filter {}:{}".format(renpy.substitute(s), previous.what))
+AttributeError: 'NoneType' object has no attribute 'what'
 
 Windows-8-6.2.9200
 Ren'Py 7.3.2.320
 ArianeEldarProject3 1.0
-Sun Jul 28 00:17:24 2019
+Mon Jul 29 20:02:22 2019

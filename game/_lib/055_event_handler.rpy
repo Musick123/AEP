@@ -72,7 +72,7 @@ init python:
 
             if key.startswith("_event_"):
 
-                # TODO: Fix
+                # TODO: Fix (after remembering why you wrote this...)
 
                 try:
 
@@ -308,7 +308,8 @@ init python:
 
 
 
-        def get_type_events(self, types=None, dt=None, valid=True, key=None):
+        def get_type_events(self, types=None, dt=None, valid=True, 
+                            key=None, reverse=False):
             """
             Return a list of events of type or list(types)
             Order is defined by event.priority reverse
@@ -338,7 +339,8 @@ init python:
                 key = "label"
 
             return sorted(events, 
-                          key=lambda x: getattr(x, key, None))
+                          key=lambda x: getattr(x, key, None),
+                          reverse=reverse)
 
 
         def visit(self, label=None):

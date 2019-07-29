@@ -333,16 +333,16 @@ init python:
             path:
                 "location_name" 
                 25
+                # conditions as tests
                 any:
                     all:
                         a_test "a_test_arg"
                         b_test "b_test_arg"
                     c_test "c_test_arg"
         """
+        distance = 25
 
         def post_init(self):
-
-            self.flatten_lists()
 
             self.destination = self.args[0]
 
@@ -350,11 +350,10 @@ init python:
                 self.args[1] = int(self.args[1])
             except:
                 pass
+ 
+            if (len(self.args) > 1 and isinstance(self.args[1], int)):
 
-            self.distance = (self.args[1] 
-                             if (len(self.args) > 1
-                                 and isinstance(self.args[1], int))
-                             else 25)
+                self.distance = self.args[1]
 
 
         def test_valid(self):
@@ -368,3 +367,126 @@ init python:
                 self.destination,
                 "Open" if self.valid else "Closed",
                 self.distance)
+
+
+    class ArrowTest(BaseTest):
+        """
+        Just holds data
+
+        @usage:
+    
+            arrow "location_name"
+
+            or
+    
+            arrow "location_name" (100, 250)
+
+            or
+
+            arrow "location_name" "right" 150 240
+        """
+        direction = "left"
+        xposition = 50
+        yposition = 340
+
+        def post_init(self):
+
+            self.destination = self.args[0]
+
+            if len(self.args) > 1:
+
+                pos_values = 0
+
+                for arg in self.args[1:]:
+
+                    try:
+
+                        arg = float(arg)
+
+                        if arg > 1.0:
+
+                            arg = int(arg)
+
+                    except:
+
+                        pass
+
+                    if isinstance(arg, (int, float)):
+
+                        setattr(self, "{}position".format(
+                            'x' if not pos_values else 'y'), arg)
+
+                        pos_values += 1
+
+                    elif (arg[0], arg[-1]) in [('(',')'),('[',']')]:
+
+                        pos = renpy.python.py_eval(arg)
+
+                        self.xposition, self.yposition = pos
+
+                        pos_values += 2
+
+                    elif isinstance(arg, basestring):
+
+                        self.direction = arg
+
+                    else:
+
+                        raise AttributeError, "ArrowTest got an invalid " \
+                                              "argument {}".format(arg)
+
+                    if pos_values > 2:
+
+                        raise AttributeError, "ArrowTest received too many " \
+                                              "position values"
+
+
+        def test_valid(self):
+
+            path_tests = [k for k in self.event.get_paths(False)
+                          if k.destination == self.destination]
+
+            if not path_tests:
+
+                raise ValueError, "Arrow points from {} to {} yet there is " \
+                                  "no similar PathTest".format(
+                                    self.event.name, self.destination)
+
+            return any( [p.valid for p in path_tests] )
+
+
+        def get_button(self):
+
+            return ImageButton(
+                "images/arrow_{}_idle.png".format(self.direction),
+                clicked=Jump(self.destination),
+                anchor=(0.5,0.5),
+                pos=(self.xposition, self.yposition))
+
+
+    class OptionTest(BaseTest):
+        """
+        Just holds data and tests
+
+        @usage:
+    
+            option:
+                # arguments
+                "argument" 
+                25
+                # conditions as tests
+                any:
+                    all:
+                        a_test "a_test_arg"
+                        b_test "b_test_arg"
+                    c_test "c_test_arg"
+        """
+
+        def test_valid(self):
+
+            return all( [ k.valid for k in self.tests ] )
+
+
+        def __repr_extra__(self):
+
+            return "Valid if all sub-tests are valid"

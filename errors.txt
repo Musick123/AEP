@@ -2,9 +2,10 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 35: u'Null' is not a keyword argument or valid child for the vbox statement.
-    Null()
-        ^
+File "game/events_code/location_code.rpy", line 112: invalid syntax
+                    kind, who, what, multiple=multiple, **kwargs):
+                                                                  ^
+    
 
 Ren'Py Version: Ren'Py 7.3.2.320
-Sun Jul 28 00:30:28 2019
+Mon Jul 29 20:35:06 2019
