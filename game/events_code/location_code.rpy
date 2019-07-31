@@ -9,7 +9,6 @@ init python:
 
         if isinstance(loc, LocationEvent):
 
-            # register that we have been here
             eh.visit(label)
 
             current_location = label
@@ -35,7 +34,7 @@ label enter_location:
 
         # Calculate sprite positions
 
-        char_positions = []
+        # char_positions = []
 
         # dialogues = eh.dialogue
 
@@ -88,7 +87,7 @@ label enter_location:
 
 screen navigation_buttons(location=None):
 
-    for nav_event in [k for k in eh.navigation if k.name == location]:
+    for nav_event in [k for k in eh.navigation if k.location == location]:
 
         for arrow in nav_event.get_buttons():
 
@@ -96,7 +95,10 @@ screen navigation_buttons(location=None):
 
 
 screen item_buttons(location=None):
-    pass
+
+    for item_event in [k for k in eh.item if k.location == location]:
+
+        add item_event.get_button()
 
 init python:
 
@@ -114,7 +116,7 @@ init python:
                 kind, who, what, multiple=multiple, **kwargs)
 
 define silent_stan = SilentStan(
-    "Silent Stan (the stalker)", 
+    "Stalker Stan", 
     screen="invisible_say")
 
 screen invisible_say(who, what):

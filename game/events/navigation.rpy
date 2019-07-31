@@ -298,8 +298,8 @@ label theater_navigation:
         path 'junction_3' 100
         path 'theater_north_1' 25
         path 'theater_south_3' 25
-        arrow 'junction_3' 'right' 1230
-        arrow 'theater_north_1' 'up' 740
+        arrow 'junction_3' 'e' 1230
+        arrow 'theater_north_1' 'n' 740
         arrow 'theater_south_3'
     return
 
@@ -310,8 +310,8 @@ label theater_north_1_navigation:
         path 'theater_north_2' 25
         path 'theater_backstage' 25
         arrow 'theater'
-        arrow 'theater_north_2' 'right' 1230
-        arrow 'theater_backstage' 'up' 680 450
+        arrow 'theater_north_2' 'e' 1230
+        arrow 'theater_backstage' 'n' 680 450
     return
 
 label theater_north_2_navigation:
@@ -321,8 +321,8 @@ label theater_north_2_navigation:
         path 'theater_north_3' 25
         path 'theater_stage' 25
         arrow 'theater_north_1'
-        arrow 'theater_north_3' 'right' 1230
-        arrow 'theater_stage' 'up' 300
+        arrow 'theater_north_3' 'e' 1230
+        arrow 'theater_stage' 'n' 300
     return
 
 label theater_north_3_navigation:
@@ -331,14 +331,14 @@ label theater_north_3_navigation:
         path 'theater_north_2' 25
         path 'theater_audience' 25
         arrow 'theater_north_2' 25
-        arrow 'theater_audience' 'up' 860
+        arrow 'theater_audience' 'n' 860
     return
 
 label theater_south_1_navigation:
     event register navigation:
         on_map ["theater"]
         path 'theater_south_2' 25
-        arrow 'theater_south_2' 'right' 1230
+        arrow 'theater_south_2' 'e' 1230
         # path 'theater_toilet' 25 if door unlocked
     return
 
@@ -347,8 +347,8 @@ label theater_south_2_navigation:
         on_map ["theater"]
         path 'theater_south_1' 25
         path 'theater_south_3' 25
-        arrow 'theater_south_1' 'left'
-        arrow 'theater_south_3' 'right' 1230
+        arrow 'theater_south_1'
+        arrow 'theater_south_3' 'e' 1230
     return
 
 label theater_south_3_navigation:
@@ -356,7 +356,7 @@ label theater_south_3_navigation:
         on_map ["theater"]
         path 'theater' 25
         path 'theater_south_2' 25
-        arrow 'theater' 'right' 1230
+        arrow 'theater' 'e' 1230
         arrow 'theater_south_2'
     return
 
@@ -365,7 +365,7 @@ label theater_audience_navigation:
         on_map ["theater"]
         path 'theater_stage' 25
         path 'theater_north_3' 25
-        arrow 'theater_stage' 'up' 560 120
+        arrow 'theater_stage' 'n' 560 120
         arrow 'theater_north_3'
     return
 
@@ -375,20 +375,23 @@ label theater_stage_navigation:
         path 'theater_backstage' 25
         path 'theater_audience' 25
         path 'theater_north_2' 25
-        arrow 'theater_backstage' 'up' 900 300
-        arrow 'theater_audience' 'down' 640 670
+        arrow 'theater_backstage' 'n' 900 300
+        arrow 'theater_audience' 's' 640 670
         arrow 'theater_north_2'
     return
 
 label theater_backstage_navigation:
     event register navigation:
         on_map ["theater"]
-        path 'theater_storage' 25
+        path:
+            'theater_storage' 
+            25
+            seen "theater_backstage_curtainpin_remove"
         path 'theater_stage' 25
         path 'theater_north_1' 25
-        arrow 'theater_storage' 'up' 200 250
-        arrow 'theater_stage' 'right' 1230
-        arrow 'theater_north_1' 'down' 640 670
+        arrow 'theater_storage' 'n' 200 250
+        arrow 'theater_stage' 'e' 1230
+        arrow 'theater_north_1' 's' 640 670
     return
 
 label theater_storage_navigation:

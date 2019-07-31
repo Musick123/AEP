@@ -210,8 +210,8 @@ init python:
 
             if len(self.visits):
 
-                print("Testing: {} vs {}".format(
-                    self.visits[-1] + self.cooldown, self._dt))
+                # print("Testing: {} vs {}".format(
+                #     self.visits[-1] + self.cooldown, self._dt))
 
                 if self.visits[-1] + self.cooldown > self._dt:
 
@@ -281,6 +281,42 @@ init python:
         def __repr_extra__(self):
 
             return "Valid if label {} has been " \
+                   "visited {} times or more".format(
+                self.args[0], self.count )
+
+
+    class UnseenTest(BaseTest):
+        """
+        Valid if the label passed as first argument has not been visited 
+        more than once (or number passed as second argument times)
+
+        @usage:
+    
+            seen "other_label"
+
+            or
+
+            seen "other_label" 2
+        """
+
+        def post_init(self):
+
+            self.count = int(self.args[1]) if len(self.args) > 1 else 1
+
+        def test_valid(self):
+
+            visits = self.event.handler._visits.get( self.args[0], [] )
+
+            if len(visits) < self.count:
+
+                return True
+
+            return False
+
+
+        def __repr_extra__(self):
+
+            return "Valid if label {} has not been " \
                    "visited {} times or more".format(
                 self.args[0], self.count )
 
@@ -383,11 +419,11 @@ init python:
 
             or
 
-            arrow "location_name" "right" 150 240
+            arrow "location_name" "sw" 150 240
         """
-        direction = "left"
-        xposition = 50
-        yposition = 340
+        direction = "w"
+        xpos = 50
+        ypos = 340
 
         def post_init(self):
 
@@ -395,36 +431,17 @@ init python:
 
             if len(self.args) > 1:
 
-                pos_values = 0
+                pos_values = []
 
                 for arg in self.args[1:]:
 
-                    try:
-
-                        arg = float(arg)
-
-                        if arg > 1.0:
-
-                            arg = int(arg)
-
-                    except:
-
-                        pass
-
                     if isinstance(arg, (int, float)):
 
-                        setattr(self, "{}position".format(
-                            'x' if not pos_values else 'y'), arg)
+                        pos_values.append(arg)
 
-                        pos_values += 1
+                    elif isinstance(arg, renpy.ast.PyExpr):
 
-                    elif (arg[0], arg[-1]) in [('(',')'),('[',']')]:
-
-                        pos = renpy.python.py_eval(arg)
-
-                        self.xposition, self.yposition = pos
-
-                        pos_values += 2
+                        pos_values.extend(list(renpy.python.py_eval(arg)))
 
                     elif isinstance(arg, basestring):
 
@@ -435,10 +452,18 @@ init python:
                         raise AttributeError, "ArrowTest got an invalid " \
                                               "argument {}".format(arg)
 
-                    if pos_values > 2:
+                if pos_values:
+
+                    if len(pos_values) > 2:
 
                         raise AttributeError, "ArrowTest received too many " \
                                               "position values"
+
+                    self.xpos = pos_values[0]
+
+                    if len(pos_values) == 2:
+
+                        self.ypos = pos_values[1]
 
 
         def test_valid(self):
@@ -450,36 +475,41 @@ init python:
 
                 raise ValueError, "Arrow points from {} to {} yet there is " \
                                   "no similar PathTest".format(
-                                    self.event.name, self.destination)
+                                    self.event.location, self.destination)
 
-            return any( [p.valid for p in path_tests] )
+            return all( [p.valid for p in path_tests] )
 
 
         def get_button(self):
 
+            # if self.valid:
+
             return ImageButton(
                 "images/arrow_{}_idle.png".format(self.direction),
-                clicked=Jump(self.destination),
+                clicked=(Jump(self.destination) if self.valid 
+                         else NullAction()),
                 anchor=(0.5,0.5),
-                pos=(self.xposition, self.yposition))
+                pos=(self.xpos, self.ypos))
+
+            # else:
+
+            #     return ImageButton(
+            #         "images/arrow_{}_idle.png".format(self.direction),
+            #         clicked=NullAction(),
+            #         anchor=(0.5,0.5),
+            #         pos=(self.xpos, self.ypos))
 
 
-    class OptionTest(BaseTest):
+    class AltBGTest(BaseTest):
         """
-        Just holds data and tests
+        Just holds data for alternate bg and tests
 
         @usage:
     
-            option:
-                # arguments
-                "argument" 
-                25
+            alt_bg:
+                "image"
                 # conditions as tests
-                any:
-                    all:
-                        a_test "a_test_arg"
-                        b_test "b_test_arg"
-                    c_test "c_test_arg"
+                simp True
         """
 
         def test_valid(self):
@@ -490,3 +520,70 @@ init python:
         def __repr_extra__(self):
 
             return "Valid if all sub-tests are valid"
+
+
+    class LayerTest(BaseTest):
+        """
+        Conditional layer for background
+
+        @usage:
+    
+            layer:
+                "image" # image name
+                (100,100) # layer position
+                # conditions as tests
+                simp True
+        """
+        xpos = 0
+        ypos = 0 
+        image = None 
+
+        def post_init(self):
+
+            pos_values = []
+
+            for arg in self.args:
+
+                if isinstance(arg, (int, float)):
+
+                    pos_values.append(arg)
+
+                elif isinstance(arg, renpy.ast.PyExpr):
+
+                    pos_values.extend(list(renpy.python.py_eval(arg)))
+
+                elif isinstance(arg, basestring):
+
+                    for k in [arg, "images/bg/{}".format(arg)]:
+                    
+                        if renpy.loadable(k):
+
+                            self.image = k
+
+                else:
+
+                    raise AttributeError, "LayerTest got an invalid " \
+                                          "argument {}".format(arg)
+
+            if pos_values:
+
+                if len(pos_values) > 2:
+
+                    raise AttributeError, "LayerTest received too many " \
+                                          "position values"
+
+                self.xpos = pos_values[0]
+
+                if len(pos_values) == 2:
+
+                    self.ypos = pos_values[1]
+
+            if not self.image:
+
+                raise AttributeError, "Found no image with {}".format(
+                    self.args)
+
+
+        def test_valid(self):
+
+            return all( [ k.valid for k in self.tests ] )

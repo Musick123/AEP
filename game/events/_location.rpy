@@ -1,14 +1,14 @@
 ﻿# There is one label at the end of location_code that does most of the work
 
-
 # Location labels
-# These are the labels that we Jump to when we enter a new location
-# They may contain their own logic and are expected to call the 
-# enter_location label to build the background and do events
+# These are the labels that we Jump to when we enter a new locations
 
 # Used to define:
     # Available positions for sprites
     # Positions for any random items
+    # Dialogue positions
+
+# These are NOT expected to contain tests
 
             ###############################################
             #                                             #
@@ -240,7 +240,6 @@ label theater_south_1:
 label theater_south_2:
     event register location:
         pass
-    a "A few words"
     return
 
 label theater_south_3:

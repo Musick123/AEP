@@ -1,9 +1,9 @@
 # Conditional background labels
-# Just used to define background images to use for any location
+# Just used to define background images and layers to use for any location
 
 # Important Note:
-# Label names should include a prefix like _background
-# It is stripped off and stored in the BackgroundEvent as name
+# Label names should start with a prefix relevant to the location
+# There is only expected to be one background label per location
 
 
             ###############################################
@@ -30,7 +30,7 @@
 
 label church_background:
     event register background:
-        option:
+        alt_bg:
             "church_open" 
             simp "False" # hedge cut?
 
@@ -90,6 +90,12 @@ label church_background:
             #                                             #
             ############################################### 
 
+label theater_backstage_background:
+    event register background:
+        layer:
+            "theater_backstage_curtain.png" 
+            (0,0)
+            unseen "theater_backstage_curtainpin_remove" # cloth not removed
 
 
             ###############################################

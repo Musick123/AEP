@@ -353,6 +353,19 @@ init python:
 
                 label = get_label_for_node( *renpy.get_filename_line() )
 
+            if label not in self.events:
+
+                # Might be a Nub
+
+                locs = [e.label for e in self.location]
+
+                if any([label.startswith(k) for k in locs]):
+
+                    self.events[label] = self.event_factory.get_event( 
+                        self, label, ([u'type', [u'nub']]) )
+                    # ([u'type', [u'navigation']], [u'on_map', [u'["villa"]']], [u'path', [u'villa', 25]], [u'path', [u'villa_wall', 25]])
+
+
             if label in self.events:
 
                 if not label in self._visits:
@@ -488,7 +501,7 @@ init python:
 
                     kwargs[arg[0]].extend( arg[1] )
 
-                    print("kwargs[ {} ]: {}".format(arg[0], kwargs[arg[0]]))
+                    # print("kwargs[ {} ]: {}".format(arg[0], kwargs[arg[0]]))
 
             # print("GTAK Return: {} : {}".format(tests, kwargs))
 

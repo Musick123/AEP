@@ -55,6 +55,7 @@ style event_overview_button is default:
 style event_overview_button_text is default:
     anchor (0.5,0.5)
     align (0.5,0.5)
+    color "#CCC"
     yoffset 2
     size 16
 
@@ -117,14 +118,22 @@ screen event_overview():
                     background frame_bg
 
                     fixed:
-                        area (0.0, 0.0, 1.0, 0.8)
+                        area (0.0, 0.0, 1.0, 0.5)
 
-                        use time_buttons
+                        viewport:
+                            draggable True 
+                            mousewheel True
+
+                            use time_buttons
 
                     fixed:
-                        area (0.0, 0.8, 1.0, 0.2)
+                        area (0.0, 0.5, 1.0, 0.5)
 
-                        use event_type_buttons#language_buttons
+                        viewport:
+                            draggable True 
+                            mousewheel True
+
+                            use event_type_buttons#language_buttons
 
             fixed:
                 area (0.2, 0, 0.8, 1.0)
