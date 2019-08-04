@@ -1,7 +1,7 @@
 
 init python:
 
-    # We might not really use these... we set them anyway
+    # We might not really use all these... we set them anyway
 
     eh_init_values = {
         'start' : "01 Nov 2018",

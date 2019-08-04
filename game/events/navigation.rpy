@@ -35,6 +35,10 @@ label junction_2_navigation:
         path 'junction_3' 100
         path 'hifi' 50
         path 'motel' 50
+        arrow 'junction_1' 'n' 640 50
+        arrow 'junction_3' 's' 640 670
+        arrow 'hifi' 
+        arrow 'motel' 'e' 1230
     return
 
 label junction_3_navigation:
@@ -44,6 +48,11 @@ label junction_3_navigation:
         path 'theater' 100
         path 'villa' 100
         path 'forest' 100
+        arrow 'junction_2' 'n' 640 50
+        arrow 'church' 'se' 840 670
+        arrow 'theater'
+        arrow 'villa' 'e' 1230
+        arrow 'forest' 's' 640 670
     return
 
 
@@ -299,7 +308,7 @@ label theater_navigation:
         path 'theater_north_1' 25
         path 'theater_south_3' 25
         arrow 'junction_3' 'e' 1230
-        arrow 'theater_north_1' 'n' 740
+        arrow 'theater_north_1' 'nw' 760 200
         arrow 'theater_south_3'
     return
 
@@ -308,10 +317,13 @@ label theater_north_1_navigation:
         on_map ["theater"]
         path 'theater' 25
         path 'theater_north_2' 25
-        path 'theater_backstage' 25
-        arrow 'theater'
+        path:
+            'theater_backstage' 
+            25
+            inventory "theater_backstage_key"
+        arrow 'theater' 'sw' 50 450
         arrow 'theater_north_2' 'e' 1230
-        arrow 'theater_backstage' 'n' 680 450
+        arrow 'theater_backstage' 'n' 630 360
     return
 
 label theater_north_2_navigation:
@@ -319,7 +331,10 @@ label theater_north_2_navigation:
         on_map ["theater"]
         path 'theater_north_1' 25
         path 'theater_north_3' 25
-        path 'theater_stage' 25
+        path:
+            'theater_stage' 
+            25
+            inventory "theater_stage_key"
         arrow 'theater_north_1'
         arrow 'theater_north_3' 'e' 1230
         arrow 'theater_stage' 'n' 300
@@ -374,7 +389,10 @@ label theater_stage_navigation:
         on_map ["theater"]
         path 'theater_backstage' 25
         path 'theater_audience' 25
-        path 'theater_north_2' 25
+        path:
+            'theater_north_2' 
+            25            
+            inventory "theater_stage_key"
         arrow 'theater_backstage' 'n' 900 300
         arrow 'theater_audience' 's' 640 670
         arrow 'theater_north_2'
@@ -388,7 +406,10 @@ label theater_backstage_navigation:
             25
             seen "theater_backstage_curtainpin_remove"
         path 'theater_stage' 25
-        path 'theater_north_1' 25
+        path:
+            'theater_north_1' 
+            25
+            inventory "theater_backstage_key"
         arrow 'theater_storage' 'n' 200 250
         arrow 'theater_stage' 'e' 1230
         arrow 'theater_north_1' 's' 640 670

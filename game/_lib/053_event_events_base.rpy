@@ -1,5 +1,5 @@
 
-init python:
+init 510 python:
 
     class BaseEvent(object):
         """
@@ -13,7 +13,7 @@ init python:
 
         Note:
 
-            Class sttributes may govern their state by 
+            Class attributes may govern their state by 
             starting with a set prefix:
 
                 store_
@@ -26,6 +26,8 @@ init python:
                     Class attributes starting with this
                     prefix will attempt to be translated
                     when accessed
+
+            Other class attributes should likely not be used
         """
 
         # used to store which attributes to translate or
@@ -84,28 +86,17 @@ init python:
 
                     key = kw[10:] # kw without leading translate_
 
+                    if not key in self.translate_attrs:
+
+                        self.translate_attrs.append( key )
+
                     try:
                     
                         value = kwargs.pop( key )
 
-                        # passed through lexer, so we can check if it is _()
-
-                        if isinstance(value, basestring) \
-                        and value.startswith("_(") \
-                        and not key in self.translate_attrs:
-
-                            self.translate_attrs.append( key )
-
                     except KeyError:
 
-                        # from class object (where all attributes
-                        # starting with underscore are translatables)
-
-                        if not key in self.translate_attrs:
-
-                            self.translate_attrs.append( key )
-
-                        value = getattr(self.__class__, kw)
+                        value = type(self).__dict__.get(kw)
 
                     setattr(self, kw, value)
 
@@ -125,7 +116,7 @@ init python:
 
                     except KeyError:
 
-                        value = getattr(self.__class__, kw)
+                        value = type(self).__dict__.get(kw)
 
                     # store_attrs are held in the store through the
                     # handler class

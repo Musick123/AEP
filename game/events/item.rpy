@@ -90,15 +90,15 @@ label theater_backstage_curtainpin:
         (250, 100)
         unseen "theater_backstage_curtainpin_remove"
 
-    if current_character == a:
+    if current.character == 'a':
 
         call theater_backstage_curtainpin_remove
 
     else:
 
-        current_character "A small pin... just out of reach"
+        getattr(character, current.character) "A small pin... just out of reach"
 
-    jump expression current_location
+    return
 
 
 label theater_backstage_curtainpin_remove:
@@ -107,10 +107,40 @@ label theater_backstage_curtainpin_remove:
 
     a "I will be taking that"
 
+    "Actually she doesn't... "
+
     # Set this label as visited
     $ eh.visit()
 
-    jump expression current_location
+    return
+
+label theater_storage_key_1:
+    event register item:
+        "KeyPetrolstorage"
+        (250, 100)
+        unseen "theater_storage_key_1"
+
+    a happy "The key for the stage door... minesies"
+
+    $ a.alter_item('theater_stage_key')
+
+    $ eh.visit()
+
+    return
+
+label theater_storage_key_2:
+    event register item:
+        "KeyPetrolstorage"
+        (450, 100)
+        unseen "theater_storage_key_2"
+
+    a happy "The key for the backstage door... in the bag with you"
+
+    $ a.alter_item('theater_backstage_key')
+
+    $ eh.visit()
+
+    return
 
 
             ###############################################

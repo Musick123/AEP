@@ -1,5 +1,5 @@
 
-init python:
+init 510 python:
 
     class BaseTest(object):
         """

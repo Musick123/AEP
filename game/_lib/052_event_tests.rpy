@@ -1,5 +1,5 @@
 
-init python:
+init 510 python:
 
     class AllTest(BaseTest):
         """
@@ -240,19 +240,23 @@ init python:
 
         def test_valid(self):
 
-            return int(self.args[0]) > len(self.visits)
+            if int(self.args[0]) < 0:
+
+                return True
+
+            return int(self.args[0]) >= len(self.visits)
 
 
         def __repr_extra__(self):
 
-            return "Valid if label has been visited upto {} times".format(
-                self.args[0] )
+            return "Valid if label has been visited upto {} times: {}".format(
+                self.args[0], self.visits )
 
 
     class SeenTest(BaseTest):
         """
         Valid if the label passed as first argument has been visited 
-        more than once (or number passed as second argument times)
+        (or more than number passed as second argument times)
 
         @usage:
     
@@ -587,3 +591,55 @@ init python:
         def test_valid(self):
 
             return all( [ k.valid for k in self.tests ] )
+
+
+    class LocationTest(BaseTest):
+        """
+        Conditional layer for background
+
+        @usage:
+    
+            location "church"
+
+            or 
+
+            location:
+                "church"
+                "church_sanctum"
+        """
+
+        def test_valid(self):
+
+            return current.location in self.args
+
+
+    class CharacterTest(BaseTest):
+        """
+        Conditional layer for background
+
+        @usage:
+    
+            character "a" "mm"
+        """
+
+        def test_valid(self):
+
+            return all([
+                current.places.get(k, None) == current.location 
+                for k in self.args])
+
+
+    class InventoryTest(BaseTest):
+        """
+        Conditional test for item in current character inventory
+
+        @usage:
+    
+            inventory "theater_stage_key"
+        """
+
+        def test_valid(self):
+
+            return all([
+                k in globals()[current.character].bag.items
+                for k in self.args])

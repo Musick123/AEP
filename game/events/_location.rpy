@@ -259,7 +259,10 @@ label theater_stage:
 
 label theater_backstage:
     event register location:
-        pass
+        layer:
+            "theater_backstage_curtain.png" 
+            (0,0)
+            unseen "theater_backstage_curtainpin_remove" # cloth not removed
     return
 
 label theater_storage:

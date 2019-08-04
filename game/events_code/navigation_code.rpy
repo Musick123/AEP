@@ -136,7 +136,7 @@ init python:
 
         if not start:
 
-            start = current_location
+            start = current.location
 
         # First get the locations and their (open) paths
         # We do this each time as paths may open or close between calls

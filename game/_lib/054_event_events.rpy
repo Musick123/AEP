@@ -1,87 +1,116 @@
 
-init python:
+init 510 python:
 
-    class LabelLocationEvent(BaseEvent):
+    class LabelLocationCharacterEvent(BaseEvent):
         """
         Subclass to add extra methods
         """
-        def get_location_rest(self, label_str=None):
-
+        def get_locations_rest(self, label_str=None):
+            """
+            Get location(s) from label name and make tests
+            church_ari_mus_convo => ['church'], 'ari_mus_convo'
+            """
             if not label_str:
 
                 label_str = self.label
 
-            labels = sorted([k.label for k in self.handler.location
-                             if label_str.startswith(k.label)],
-                            key=len)
+            poss_locations = sorted(['anywhere_'] + [
+                                     "{}_".format(k.label)
+                                     for k in self.handler.location],
+                                    key=len, reverse=True)
 
-            if not labels:
+            locations = []
 
-                return None, self.label 
+            for loc in poss_locations:
 
-            if len(labels) > 1:
+                if loc in label_str:
 
-                if len(labels[-1]) == len(labels[-2]):
+                    locations.append(loc[:-1])
 
-                    raise ValueError, "Could not find unique location " \
-                                      "from '{}'".format(label_str)
+                    label_str = label_str.replace(loc, '_')
 
-            return labels[-1], label_str[ len(labels[-1]) : ].strip('_')
+            return locations, label_str.strip('_')
 
 
-        def get_characters_rest(self, label_str=None):
+        def make_location_tests(self, label_str=None):
+            """
+            Get location(s) from label name and make tests
+            church_ari_mus_convo => ['church'], 'ari_mus_convo'
+            """
+            locations, rest = self.get_locations_rest(label_str)
 
+            if locations:
+
+                self.tests.append(LocationTest(self, args=locations))
+
+            return label_str.strip('_')
+
+
+        def get_chars_rest(self, label_str=None):
+            """
+            Get primary characters from label name and make tests
+            church_a_mm_convo => ['a','mm'], 'convo'
+            """
             if not label_str:
 
                 label_str = self.label
 
-            poss_chars = ['a','r','mm']
+            poss_chars = set( ['anyone_'] + [
+                "{}_".format(k) 
+                for k in character.__dict__
+                if isinstance(getattr(character, k), ADVCharacter)
+                and getattr(getattr(character, k), "image_tag", None)])
 
-            test_parts = label_str.split('_')
+            # print("Poss Chars: {} : {}".format(poss_chars, 0))
 
-            if not test_parts:
+            chars = []
 
-                return [], ""
+            for char in poss_chars:
 
-            chars, rest = [], []
+                if char in label_str:
 
-            for tpc,tp in enumerate(test_parts):
+                    chars.append(char[:-1])
 
-                if tp in poss_chars:
+                    label_str = label_str.replace(char, '_')
 
-                    chars.append(tp)
-
-                    continue 
-
-                else:
-
-                    rest.extend(test_parts[tpc:])
-
-                    break
-
-            return chars, "_".join(rest)
+            return chars, label_str
 
 
-    class BackgroundEvent(LabelLocationEvent):
+        def make_character_tests(self, label_str=None):
+            """
+            Get location(s) from label name and make tests
+            church_ari_mus_convo => ['church'], 'ari_mus_convo'
+            """
+            chars, rest = self.get_chars_rest(label_str)
 
-        location = None
+            if chars:
+
+                self.tests.append(CharacterTest(self, args=chars))
+
+            return label_str.strip('_')
+
+
+
+
+    class LocationEvent(BaseEvent):
+
 
         def __init__(self, handler=None, *tests, **kwargs):
 
-            super(BackgroundEvent, self).__init__(handler, *tests, **kwargs)
+            super(LocationEvent, self).__init__(handler, *tests, **kwargs)
 
-            loc, _ = self.get_location_rest(self.label)
+            self.duration = self.handler.get_timedelta("30 days")
+            # so as not to clutter the _visits list
 
-            if not loc:
+            # xpos range : ypos
+            self.sprite_positions = {
+                (0,1280) : 700
+            }
 
-                raise ValueError, "Background could not determine " \
-                                  "location from label {}".format(self.label)
+            self.random_item_positions = []
 
-            self.location = loc
 
         def get_background(self):
-
-            paths = []
 
             for test in [ k for k in self.tests if k.ref_name == "option" ]:
 
@@ -89,7 +118,8 @@ init python:
 
                     return test.args[0]
 
-            return self.location
+            return self.label
+
 
         def get_layers(self):
 
@@ -103,10 +133,11 @@ init python:
 
             return layers
 
+
         def __repr_extra__(self):
 
             return " at {}:\n{}".format(
-                self.location,
+                self.label,
                 "\n".join([str(t) for t in self.tests]) )
 
 
@@ -118,36 +149,24 @@ init python:
         duration = "6 hours"
 
 
-    class LocationEvent(BaseEvent):
-
-        # xpos range : ypos
-        sprite_positions = {
-            (0,1280) : 700
-        }
-
-        random_item_positions = []
-
-        duration = "10 years" # so as not to clutter the _visits list
-
-
-    class NavigationEvent(LabelLocationEvent):
-
-        on_map = ["town"]
-
-        location = None
+    class NavigationEvent(LabelLocationCharacterEvent):
 
         def __init__(self, handler=None, *tests, **kwargs):
 
             super(NavigationEvent, self).__init__(handler, *tests, **kwargs)
 
-            loc, _ = self.get_location_rest(self.label)
+            if not 'on_map' in self.__dict__:
+
+                self.on_map = ["town"]
+
+            loc, _ = self.get_locations_rest(self.label)
 
             if not loc:
 
                 raise ValueError, "NavigationEvent could not determine " \
                                   "location from label {}".format(self.label)
 
-            self.location = loc
+            self.location = loc[0]
 
 
         def get_paths(self, valid=True):
@@ -174,7 +193,7 @@ init python:
 
             return "{} with Paths:\n{}".format(
                 self.location,
-                "\n".join([str(t) for t in self.tests]) )
+                "\n".join([str(t) for t in self.get_paths(False)]) )
 
 
         @property
@@ -185,89 +204,56 @@ init python:
                 # [t.valid for t in self.tests if t.ref_name == "path"] ) 
 
 
-    class DialogueEvent(LabelLocationEvent):
-
-        locations = [] 
-        characters = []
-        auto = True
+    class DialogueEvent(LabelLocationCharacterEvent):
 
         def __init__(self, handler=None, *tests, **kwargs):
 
             super(DialogueEvent, self).__init__(handler, *tests, **kwargs)
 
-            if self.args:
+            if not 'auto' in self.__dict__:
 
-                self.locations.extend(self.args)
+                self.auto = True
 
-            label_info = self.label[:]
+            rest = self.make_location_tests(self.label)
 
-            loc, _ = self.get_location_rest(label_info)
+            rest = self.make_character_tests(rest)
 
-            if loc:
+            repeat = [k for k in self.tests if k.ref_name == "repeat"]
 
-                self.locations.append(loc)
+            if not repeat:
 
-            chars, _ = self.get_characters_rest(label_info)
-
-            if chars:
-
-                self.characters = chars + self.characters
+                self.tests.append(RepeatTest(self, args=[0]))
 
 
         def __repr_extra__(self):
 
-            return " at {} with {}:\n{}".format(
-                self.locations,
-                self.characters,
+            return "\n{}".format(
                 "\n".join([str(t) for t in self.tests]) )
 
 
         @property
         def valid(self):
 
-            if (self.locations 
-                and "anywhere" not in self.locations
-                and current_location not in self.locations):
-
-                return False
-
-            if (self.characters
-                and "anyone" not in self.characters
-                and not all([
-                    character_locations[getattr(character,k)] 
-                        == current_location 
-                    for k in self.characters])):
-
-                return False
-
             return all( [ t.valid for t in self.tests ] )
 
 
-    class ItemEvent(LabelLocationEvent):
-
-        location = None
-        xpos = 100
-        ypos = 200
-        image = None
+    class ItemEvent(LabelLocationCharacterEvent):
 
         def __init__(self, handler=None, *tests, **kwargs):
 
             super(ItemEvent, self).__init__(handler, *tests, **kwargs)
 
-            if not self.location:
+            for k,v in {'xpos':100, 'ypos':200, 'image':None}.items():
 
-                loc, _ = self.get_location_rest(self.label)
+                if not k in self.__dict__:
 
-                if not loc:
+                    setattr(self, k, v)
 
-                    raise ValueError, "Item could not determine location " \
-                                      "from label {}".format(self.label)
-
-                self.location = loc
+            rest = self.make_location_tests(self.label)
 
             if not self.image:
 
-                self.image = self.label[:]
+                self.image = rest
 
             pos_values = []
 
@@ -319,25 +305,21 @@ init python:
 
             return ImageButton(
                 self.image,
-                clicked=Jump(self.label),
+                clicked=Call(self.label),
                 anchor=(0.5,0.5),
                 pos=(self.xpos, self.ypos))
 
 
         def __repr_extra__(self):
 
-            return "{} at {}:\n{}".format(
+            return "{} ({}):\n{}".format(
                 self.image,
-                self.location,
+                (self.xpos, self.ypos),
                 "\n".join([str(t) for t in self.tests]) )
 
 
         @property
         def valid(self):
-
-            if self.location and current_location != self.location:
-
-                return False
 
             return all( [ t.valid for t in self.tests ] ) 
 

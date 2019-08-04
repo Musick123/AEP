@@ -3,7 +3,7 @@
 
 # These generally have:
     # A location (where it happens)
-    # Characters present (often more than one)
+    # Characters present (sometimes more than one)
     # Conditional Tests
 
 # The location and initiator are taken from the label name if not 
@@ -27,14 +27,40 @@
 
 label theater_south_2_a_waking_up:
     event register dialogue:
-        locations "cat" "dog"
-        repeat 1
-
+        pass
 
     a outdoorsleep "Uh-oooh"
 
-    a angry "Where am I? Ohh, I recall I went for little witches..." 
+    a "Where am I? Ohh, I recall I went for little witches..." 
 
-    a normal "Is the party over? It is all silent... Pfft, let's have a look."
+    a angry "Is the party over? It is all silent... Pfft, let's have a look."
+        
+    return
+
+label theater_a_first_visit:
+    event register dialogue:
+        pass
+
+    a "Looks like all the cars are gone"
+        
+    return
+
+label theater_north_1_a_first_visit:
+    event register dialogue:
+        pass
+
+    a "That's not hugely helpful. Someone has locked this door"
+
+    $ eh.visit()
+        
+    return
+
+label theater_north_2_a_first_visit:
+    event register dialogue:
+        pass
+
+    a "Another locked door... hmmm"
+
+    a "I'm pretty sure I had the keys last night"
         
     return
