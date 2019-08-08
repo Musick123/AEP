@@ -33,6 +33,11 @@ label enter_location:
                  if v == current.location]
 
         # Calculate sprite positions
+        # Characters are loaded in across the x range of the location
+        # with player character being first
+
+        positions = []
+
 
         # char_positions = []
 

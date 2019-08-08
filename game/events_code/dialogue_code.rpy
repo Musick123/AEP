@@ -56,7 +56,7 @@ style cartoon_speech_frame:
     # our background picture
     background Frame(
         # the image
-        "images/speech.main.32.png", 
+        "images/ui/speech.main.32.png", 
         # frame borders
         # see: https://www.renpy.org/doc/html/displayables.html#Frame
         # the values set left, top, right, base cut sizes
@@ -81,7 +81,7 @@ style cartoon_speech_text:
 
 screen cartoon_dialogue(who, what, **kwargs):
 
-    # This deactivates the screen until dialogue is finished
+    # This deactivates the game buttons until dialogue is finished
     button:
 
         action Function( renpy.end_interaction, 1 )

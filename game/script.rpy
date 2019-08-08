@@ -1,12 +1,23 @@
 ﻿# TODO:
     # Get dialogues working ... auto ones are done
-    # Position characters on screen
+    #
     # Background displayable cache
+    #
     # SubCharacters just for speech style changes 
+    #
     # Improve Silent Stan (tweak rollback) and get him to mention 
     # his stalk words before other dialogue
+    #
     # Test that class attributes are not altering (inventory mostly)
+    #
     # Think about ItemEvents having repeat 0 and auto visit
+    #
+    # Position characters on screen
+    # All extra screen images (nav buttons, items, characters) should 
+    # be anchored at (0.5, 1.0)
+    # Position speech according to character mouth
+    #
+    # Make sure Handler is freshly loaded each init ()
 
 init python:
 

@@ -401,10 +401,7 @@ label theater_stage_navigation:
 label theater_backstage_navigation:
     event register navigation:
         on_map ["theater"]
-        path:
-            'theater_storage' 
-            25
-            seen "theater_backstage_curtainpin_remove"
+        path 'theater_storage' 25
         path 'theater_stage' 25
         path:
             'theater_north_1' 

@@ -488,12 +488,26 @@ init 510 python:
 
             # if self.valid:
 
-            return ImageButton(
-                "images/arrow_{}_idle.png".format(self.direction),
+            return renpy.display.behavior.ImageButton(
+                "images/ui/arrow_{}_idle.png".format(self.direction),
+                hover_image="images/ui/arrow_{}_hover.png".format(self.direction),
                 clicked=(Jump(self.destination) if self.valid 
                          else NullAction()),
                 anchor=(0.5,0.5),
                 pos=(self.xpos, self.ypos))
+
+
+                 # idle_image,
+                 # hover_image=None,
+                 # insensitive_image=None,
+                 # activate_image=None,
+                 # selected_idle_image=None,
+                 # selected_hover_image=None,
+                 # selected_insensitive_image=None,
+                 # selected_activate_image=None,
+                 # style='image_button',
+                 # clicked=None,
+                 # hovered=None,
 
             # else:
 

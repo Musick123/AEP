@@ -102,12 +102,27 @@ init 510 python:
             self.duration = self.handler.get_timedelta("30 days")
             # so as not to clutter the _visits list
 
-            # xpos range : ypos
-            self.sprite_positions = {
-                (0,1280) : 700
-            }
+            # Positions for sprites in this location
+            #
+            # Used to say where the floor is
+            self.floor = kwargs.get('floor', [(0,700), (1280, 700)])
 
-            self.random_item_positions = []
+            # Used to say allowable x positions
+            self.okx = kwargs.get('okx', [(100, 1180)])
+            # We offset characters away from buttons and items too
+
+            # Positions of random items
+            self.rand_pos = []
+
+
+        def get_char_positions(self, num=1):
+            """
+            Return (x,y) tuples for the (0.5,1.0) feet anchor for each char
+            """
+            float_xs = [ (1.0/float(num*2)) * ((k*2)+1) for k in range(num) ]
+            pos_xs = []
+            return
+
 
 
         def get_background(self):

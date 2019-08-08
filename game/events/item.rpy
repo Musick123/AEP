@@ -85,38 +85,38 @@
             #                                             #
             ############################################### 
 
-label theater_backstage_curtainpin:
-    event register item:
-        (250, 100)
-        unseen "theater_backstage_curtainpin_remove"
+# label theater_backstage_curtainpin:
+#     event register item:
+#         (250, 100)
+#         unseen "theater_backstage_curtainpin_remove"
 
-    if current.character == 'a':
+#     if current.character == 'a':
 
-        call theater_backstage_curtainpin_remove
+#         call theater_backstage_curtainpin_remove
 
-    else:
+#     else:
 
-        getattr(character, current.character) "A small pin... just out of reach"
+#         getattr(character, current.character) "A small pin... just out of reach"
 
-    return
+#     return
 
 
-label theater_backstage_curtainpin_remove:
+# label theater_backstage_curtainpin_remove:
 
-    a "A small pin... useful for adding to eyeballs"
+#     a "A small pin... useful for adding to eyeballs"
 
-    a "I will be taking that"
+#     a "I will be taking that"
 
-    "Actually she doesn't... "
+#     "Actually she doesn't... "
 
-    # Set this label as visited
-    $ eh.visit()
+#     # Set this label as visited
+#     $ eh.visit()
 
-    return
+#     return
 
 label theater_storage_key_1:
     event register item:
-        "KeyPetrolstorage"
+        "key_theater_stage"
         (250, 100)
         unseen "theater_storage_key_1"
 
@@ -130,7 +130,7 @@ label theater_storage_key_1:
 
 label theater_storage_key_2:
     event register item:
-        "KeyPetrolstorage"
+        "key_theater_backstage"
         (450, 100)
         unseen "theater_storage_key_2"
 
