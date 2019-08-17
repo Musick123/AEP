@@ -278,60 +278,61 @@ label scrap:
 
 label theater:
     event register location:
-        pass
+        floor [((415,670), (1180,670))]
     return
 
 label theater_north_1:
     event register location:
-        floor [((350,630), (1130,700))]
+        floor [((340,630), (1180,700))]
     return
 
 label theater_north_2:
     event register location:
-        pass
+        floor [((100,690), (1180,770))]
     return
 
 label theater_north_3:
     event register location:
-        pass
+        floor [((100,730), (1180,800))]
     return
 
 label theater_south_1:
     event register location:
-        pass
+        floor [((190,620), (1180,720))]
     return
 
 label theater_south_2:
     event register location:
-        pass
+        floor [((100,660), (510,700)), ((780,710), (1180,730))]
     return
 
 label theater_south_3:
     event register location:
-        pass
+        floor [((100,680), (800,760)), ((801,760), (1180,650))]
     return
 
 label theater_audience:
     event register location:
-        pass
+        floor [((100,650), (300,650))] # Bad - No room for characters
     return
 
 label theater_stage:
     event register location:
-        pass
+        floor [((180,670), (870,670))]
     return
 
 label theater_backstage:
     event register location:
+        floor [((100,670), (1180,670))]
         # layer:
         #     "theater_backstage_curtain.png"
         #     (0,0)
         #     unseen "theater_backstage_curtainpin_remove" # cloth not removed
-        pass
     return
 
 label theater_storage:
     event register location:
+        floor [((100,670), (760,670))]
         item:
             "key_theater_stage_idle" 250 100 "theater_storage_key_1"
             unseen "theater_storage_key_1"

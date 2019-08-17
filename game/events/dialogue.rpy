@@ -30,7 +30,7 @@ label theater_south_2_a_waking_up:
         pass
 
     show ari: # On this one we put her at a set place on screen
-        pos (410,735)
+        pos (410,710)
 
     a outdoorsleep "Uh-oooh"
 
