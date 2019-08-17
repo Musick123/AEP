@@ -5,11 +5,11 @@ init python:
 
         global current
 
+        eh.visit(label)
+
         loc = eh.events.get(label, None)
 
         if isinstance(loc, LocationEvent):
-
-            eh.visit(label)
 
             current.location = label
 
@@ -18,6 +18,75 @@ init python:
     config.label_callback = location_callback
 
 
+    def show_char_sprite( char=('a', (100, 100)) ):
+        """
+        Show the character sprite at the position stated
+        Moving to said position if needed
+        """
+
+        global current
+
+        tag = getattr(getattr(character, char[0]), "image_tag")
+
+        if not tag:
+
+            raise AttributeError, "No image found for character {}".format(
+                char[0])
+
+        start_pos = char[1]
+
+        last_pos = current.sprites.get(tag, None)
+
+        if last_pos and last_pos[0] == current.location:
+
+            start_pos = last_pos[1]
+
+        renpy.show(
+                tag,
+                at_list=[ move_char_to( tag, start_pos, char[1] ) ] )
+
+
+    def get_warped_proportion(current_time, max_time, warper='linear'):
+        # Utility to return a proportion from the parameters
+        # For bound warpers, this will be between 0.0 and 1.0 
+        return renpy.atl.warpers[warper.lower()]( current_time / max_time ) 
+
+
+    def move_sprite_to(tag, start_pos, end_pos, trans, st, at):
+
+        global current
+
+        current_pos = start_pos
+
+        if start_pos != end_pos:
+
+            ratio = get_warped_proportion(st, 1.0, 'ease_cubic')
+
+            ratio = min(1.0, max(0.0, ratio))
+
+            current_pos = (
+                start_pos[0] + int(ratio * float(end_pos[0] - start_pos[0])),
+                start_pos[1] + int(ratio * float(end_pos[1] - start_pos[1])))
+
+        current.sprites[tag] = [current.location, current_pos]
+
+        # print("{}:{}:{}:{}:{}:{}".format(
+        #     tag, start_pos, end_pos, current_pos, st, at))
+
+        trans.pos = current_pos
+
+        if current_pos == end_pos:
+
+            return None
+
+        return 0.0
+
+
+
+
+transform move_char_to(tag, start_pos, end_pos):
+    anchor (0.5, 1.0)
+    function renpy.curry(move_sprite_to)(tag, start_pos, end_pos)
 
 # The label we Call whenever we enter a new LocationEvent location
 
@@ -29,15 +98,25 @@ label enter_location:
 
         current.places[current.character] = current.location
 
-        chars = [k for k,v in current.places.items() 
-                 if v == current.location]
+        loc_events = [k for k in eh.location 
+                      if k.label == current.location]
 
-        # Calculate sprite positions
-        # Characters are loaded in across the x range of the location
-        # with player character being first
+        nav_events = [k for k in eh.navigation 
+                      if k.location == current.location]
 
-        positions = []
+        if len(loc_events) != 1 or len(nav_events) != 1:
 
+            raise ValueError, "Found {} LocationEvent and {} " \
+                              "NavigationEvent for {}. Need just 1 of " \
+                              "each".format(len(loc_events), 
+                                            len(nav_events),
+                                            current.location)
+
+        arrows = nav_events[0].get_arrows()
+
+        items = loc_events[0].get_items()
+
+        chars = loc_events[0].get_chars(arrows)
 
         # char_positions = []
 
@@ -58,38 +137,24 @@ label enter_location:
 
     # Navigation Buttons
 
-    show screen navigation_buttons(current.location)
+    show screen navigation_buttons([k.get_button() for k in arrows])
 
     # Any Items lying around?
 
-    show screen item_buttons(current.location)
+    show screen item_buttons([k.get_button() for k in items])
 
     # Visible characters
 
-    # show ari
-
     while chars:
 
-        $ sprite = getattr(character, chars.pop()).image_tag
-
-        if sprite:
-
-            $ renpy.show(
-                sprite,
-                at_list=[Transform(
-                    anchor=(0.5, 1.0),
-                    pos=(200 + (200*len(chars)), 0.9))])
+        $ show_char_sprite( chars.pop() )
 
     if auto_dialogues:
 
         # grab the first, then refresh this location in case other 
         # dialogues or stuff appeared
 
-        $ auto_dialogue_label = auto_dialogues.pop(0).label
-
-        call expression auto_dialogue_label
-
-        $ eh.visit(auto_dialogue_label)
+        call expression auto_dialogues.pop(0).label
 
     else:
 
@@ -100,20 +165,18 @@ label enter_location:
     return
 
 
-screen navigation_buttons(location=None):
+screen navigation_buttons(arrows=[]):
 
-    for nav_event in [k for k in eh.navigation if k.location == location]:
+    for arrow in arrows:
 
-        for arrow in nav_event.get_buttons():
-
-            add arrow
+        add arrow
 
 
-screen item_buttons(location=None):
+screen item_buttons(items=[]):
 
-    for item_event in [k for k in eh.item]:
+    for item in items:
 
-        add item_event.get_button()
+        add item
 
 
 init python:
@@ -196,7 +259,7 @@ init 1 python:
 
                 if len(bg) > 1:
 
-                    raise ValueError, "Multiple background labels found for" \
+                    raise ValueError, "Multiple location labels found for" \
                                       "{}".format(current.location)
 
                 layers = []

@@ -4,9 +4,8 @@
 # These are the labels that we Jump to when we enter a new locations
 
 # Used to define:
-    # Available positions for sprites
+    # Available positions for sprites (floor sections)
     # Positions for any random items
-    # Dialogue positions
 
 # These are NOT expected to contain tests
 
@@ -167,6 +166,71 @@ label motel_lobby:
         pass
     return
 
+label motel_hall_1:
+    event register location:
+        pass
+    return
+
+label motel_hall_2:
+    event register location:
+        pass
+    return
+
+label motel_hall_3:
+    event register location:
+        pass
+    return
+
+label motel_hall_4:
+    event register location:
+        pass
+    return
+
+label motel_hall_5:
+    event register location:
+        pass
+    return
+
+label motel_hall_6:
+    event register location:
+        pass
+    return
+
+label motel_room_1:
+    event register location:
+        pass
+    return
+
+label motel_room_2:
+    event register location:
+        pass
+    return
+
+label motel_room_3:
+    event register location:
+        pass
+    return
+
+label motel_room_4:
+    event register location:
+        pass
+    return
+
+label motel_room_5:
+    event register location:
+        pass
+    return
+
+label motel_room_6:
+    event register location:
+        pass
+    return
+
+label motel_shower:
+    event register location:
+        pass
+    return
+
 # TODO: Motel sub rooms
 
             ###############################################
@@ -210,7 +274,7 @@ label scrap:
             #                                             #
             #                 The Theater                 #
             #                                             #
-            ############################################### 
+            ###############################################
 
 label theater:
     event register location:
@@ -219,7 +283,7 @@ label theater:
 
 label theater_north_1:
     event register location:
-        pass
+        floor [((350,630), (1130,700))]
     return
 
 label theater_north_2:
@@ -260,7 +324,7 @@ label theater_stage:
 label theater_backstage:
     event register location:
         # layer:
-        #     "theater_backstage_curtain.png" 
+        #     "theater_backstage_curtain.png"
         #     (0,0)
         #     unseen "theater_backstage_curtainpin_remove" # cloth not removed
         pass
@@ -268,7 +332,12 @@ label theater_backstage:
 
 label theater_storage:
     event register location:
-        pass
+        item:
+            "key_theater_stage_idle" 250 100 "theater_storage_key_1"
+            unseen "theater_storage_key_1"
+        item:
+            "key_theater_backstage_idle" 450 100 "theater_storage_key_2"
+            unseen "theater_storage_key_2"
     return
 
             ###############################################

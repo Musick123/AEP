@@ -29,10 +29,13 @@ label theater_south_2_a_waking_up:
     event register dialogue:
         pass
 
+    show ari: # On this one we put her at a set place on screen
+        pos (410,735)
+
     a outdoorsleep "Uh-oooh"
 
     a "Where am I? Ohh, I recall I went for little witches..." 
-
+    
     a angry "Is the party over? It is all silent... Pfft, let's have a look."
         
     return
@@ -49,18 +52,16 @@ label theater_north_1_a_first_visit:
     event register dialogue:
         pass
 
-    a "That's not hugely helpful. Someone has locked this door"
+    a "Pffft, that's not hugely-huge helpful. Some bollock has locked this door."
 
-    $ eh.visit()
-        
     return
 
 label theater_north_2_a_first_visit:
     event register dialogue:
         pass
 
-    a "Another locked door... hmmm"
+    a "Another locked door... pffft."
 
-    a "I'm pretty sure I had the keys last night"
-        
+    a "Shoggoth-poo, I'm pretty-pretty sure I had the keys last night."
+
     return

@@ -380,9 +380,10 @@ init 510 python:
                         b_test "b_test_arg"
                     c_test "c_test_arg"
         """
-        distance = 25
 
         def post_init(self):
+
+            self.distance = 25
 
             self.destination = self.args[0]
 
@@ -425,11 +426,13 @@ init 510 python:
 
             arrow "location_name" "sw" 150 240
         """
-        direction = "w"
-        xpos = 50
-        ypos = 340
 
         def post_init(self):
+            
+            self.direction = "w"
+            self.idle_image = ""
+            self.xpos = 50
+            self.ypos = 340
 
             self.destination = self.args[0]
 
@@ -469,6 +472,35 @@ init 510 python:
 
                         self.ypos = pos_values[1]
 
+            self.idle_image = "images/ui/arrow_{}_idle.png".format(
+                self.direction)
+
+
+        def get_imagebutton_kws(self):
+
+            parts = self.idle_image.rpartition('idle')
+
+            ret_dict = {}
+
+            if parts[1] == "idle":
+
+                for k in [
+                    'hover',
+                    'insensitive',
+                    'activate',
+                    'selected_idle',
+                    'selected_hover',
+                    'selected_insensitive',
+                    'selected_activate']:
+
+                    state_img = "{}{}{}".format(parts[0], k, parts[2])
+
+                    if renpy.loadable(state_img):
+
+                        ret_dict["{}_image".format(k)] = state_img
+
+            return ret_dict
+
 
         def test_valid(self):
 
@@ -489,33 +521,118 @@ init 510 python:
             # if self.valid:
 
             return renpy.display.behavior.ImageButton(
-                "images/ui/arrow_{}_idle.png".format(self.direction),
-                hover_image="images/ui/arrow_{}_hover.png".format(self.direction),
+                self.idle_image,
                 clicked=(Jump(self.destination) if self.valid 
                          else NullAction()),
-                anchor=(0.5,0.5),
-                pos=(self.xpos, self.ypos))
+                anchor=(0.5,1.0),
+                pos=(self.xpos, self.ypos),
+                **self.get_imagebutton_kws())
 
 
-                 # idle_image,
-                 # hover_image=None,
-                 # insensitive_image=None,
-                 # activate_image=None,
-                 # selected_idle_image=None,
-                 # selected_hover_image=None,
-                 # selected_insensitive_image=None,
-                 # selected_activate_image=None,
-                 # style='image_button',
-                 # clicked=None,
-                 # hovered=None,
+    class ItemTest(BaseTest):
+        """
+        Just holds data
 
-            # else:
+        @usage:
+    
+            item "idle_image" 250 150 "label_to_call"
+        """
 
-            #     return ImageButton(
-            #         "images/arrow_{}_idle.png".format(self.direction),
-            #         clicked=NullAction(),
-            #         anchor=(0.5,0.5),
-            #         pos=(self.xpos, self.ypos))
+        def post_init(self):
+
+            self.call = None 
+            self.xpos = 50
+            self.ypos = 340
+
+            self.flatten_lists()
+
+            self.idle_image = self.args[0]
+
+            if len(self.args) > 1:
+
+                pos_values = []
+
+                for arg in self.args[1:]:
+
+                    if isinstance(arg, (int, float)):
+
+                        pos_values.append(arg)
+
+                    elif isinstance(arg, renpy.ast.PyExpr):
+
+                        pos_values.extend(list(renpy.python.py_eval(arg)))
+
+                    elif isinstance(arg, basestring):
+
+                        self.call = arg
+
+                    else:
+
+                        raise AttributeError, "ItemTest got an invalid " \
+                                              "argument {}".format(arg)
+
+                if pos_values:
+
+                    if len(pos_values) > 2:
+
+                        raise AttributeError, "ItemTest received too many " \
+                                              "position values"
+
+                    self.xpos = pos_values[0]
+
+                    if len(pos_values) == 2:
+
+                        self.ypos = pos_values[1]
+
+            for k in [self.idle_image,
+                      "images/items/{}".format(self.idle_image),
+                      "images/items/{}.png".format(self.idle_image)]:
+
+                if renpy.loadable(k):
+
+                    self.idle_image = k
+
+
+        def get_imagebutton_kws(self):
+
+            parts = self.idle_image.rpartition('idle')
+
+            ret_dict = {}
+
+            if parts[1] == "idle":
+
+                for k in [
+                    'hover_image',
+                    'insensitive',
+                    'activate',
+                    'selected_idle',
+                    'selected_hover',
+                    'selected_insensitive',
+                    'selected_activate']:
+
+                    state_img = "{}{}{}".format(parts[0], k, parts[2])
+
+                    if renpy.loadable(state_img):
+
+                        ret_dict["{}_image".format(k)] = state_img
+
+            return ret_dict
+
+
+        def test_valid(self):
+
+            return all( [ k.valid for k in self.tests ] )
+
+
+        def get_button(self):
+
+            return renpy.display.behavior.ImageButton(
+                self.idle_image,
+                clicked=(Call(self.call) if self.valid and self.call
+                         else NullAction()),
+                anchor=(0.5,1.0),
+                pos=(self.xpos, self.ypos),
+                **self.get_imagebutton_kws())
 
 
     class AltBGTest(BaseTest):
@@ -572,7 +689,9 @@ init 510 python:
 
                 elif isinstance(arg, basestring):
 
-                    for k in [arg, "images/bg/{}".format(arg)]:
+                    for k in [arg, 
+                              "images/bg/{}".format(arg), 
+                              "images/bg/{}.png".format(arg)]:
                     
                         if renpy.loadable(k):
 

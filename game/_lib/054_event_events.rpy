@@ -104,30 +104,160 @@ init 510 python:
 
             # Positions for sprites in this location
             #
-            # Used to say where the floor is
-            self.floor = kwargs.get('floor', [(0,700), (1280, 700)])
-
-            # Used to say allowable x positions
-            self.okx = kwargs.get('okx', [(100, 1180)])
+            # Used to say where the floor is (can use multiple sectors)
+            # [ ((x0,y0),(x1,y1)) ((x2,y2),(x3,y3)) ]
+            self.floor = kwargs.get('floor', None)
+            if self.floor:
+                self.floor = renpy.python.py_eval(self.floor[0])
+            else:
+                self.floor = [((150,710), (1130, 710))]
             # We offset characters away from buttons and items too
 
             # Positions of random items
             self.rand_pos = []
 
 
-        def get_char_positions(self, num=1):
+        def get_chars(self, arrows=[]):
             """
-            Return (x,y) tuples for the (0.5,1.0) feet anchor for each char
+            Return ('ref',x,y) tuples for the (0.5,1.0) feet anchor 
+            for each char in render order (controlled character last)
             """
-            float_xs = [ (1.0/float(num*2)) * ((k*2)+1) for k in range(num) ]
-            pos_xs = []
-            return
 
+            # Determine available xpos ranges (avoiding items)
+            items = arrows + self.get_items()
+            item_places = [(k.xpos-49, k.xpos+49) for k in items]
+            # [ (120,160), (310,350) ]
+
+            vectors = []
+            for start, end in self.floor:
+
+                if start[0] > end[0]:
+
+                    start, end = end, start
+
+                points = []
+
+                xpos = start[0]
+
+                while xpos <= end[0]:
+
+                    if not any([xpos in range(*k) for k in item_places]):
+
+                        # Add it to points
+
+                        points.append( (xpos, int(
+                                start[1] + (
+                                    (float(xpos - start[0]) 
+                                     / float(end[0] - start[0])) 
+                                    * (end[1] - start[1])))) )
+
+                        # Move to next invalid xpos and add a point
+
+                        next_item = sorted(
+                            [k[0] for k in item_places if k[0] > xpos] )
+
+                        if not next_item or next_item[0] > end[0]:
+
+                            xpos = end[0]
+
+                            points.append( end )
+
+                            xpos += 1
+
+                        else:
+
+                            xpos = next_item[0] - 1
+
+                            points.append( (xpos, int(
+                                    start[1] + (
+                                        (float(xpos - start[0]) 
+                                         / float(end[0] - start[0])) 
+                                        * (end[1] - start[1])))) )
+
+                            xpos += 1
+
+                    else:
+
+                        # Move to first valid xpos (or past end)
+
+                        next_item = sorted(
+                            [k[1] for k in item_places if k[1] > xpos] )
+
+                        if not next_item:
+
+                            xpos = end[0] + 1
+
+                        else:
+
+                            xpos = next_item[0] + 1
+
+                vectors.extend(points)
+
+            vectors = [(vectors[k], vectors[k+1]) 
+                       for k in range(0, len(vectors), 2)]
+
+            other_chars = [k for k,v in current.places.items() 
+                           if v == current.location 
+                           and k != current.character]
+            char_places = [ current.character ]
+
+            for idx, other_char in enumerate(other_chars):
+
+                if idx % 2:
+                    char_places = [ other_char ] + char_places
+                else:
+                    char_places = char_places + [ other_char ]
+
+
+            float_xs = [(1.0/float(len(char_places)*2)) 
+                        * ((k*2)+1) for k in range(len(char_places)) ]
+            # [1.0 / (len(char_places) + 1) * (k + 1) 
+            #             for k in range(len(char_places))]
+
+            chars = [] # [ ('a', (120,710)) ]
+
+            x_vals_in_vectors = sum( [ k[1][0] - k[0][0] for k in vectors ] )
+
+            for idx, char in enumerate(char_places):
+
+                # Calculate the xpos, ypos
+
+                xval = int(x_vals_in_vectors * float_xs[idx])
+
+                for start, end in vectors:
+
+                    vector_width = end[0] - start[0]
+
+                    if xval <= vector_width:
+
+                        # This char is in this vector
+
+                        xpos = start[0] + xval
+
+                        chars.append( (char, (xpos, int(
+                                    start[1] + (
+                                        (float(xpos - start[0]) 
+                                         / float(end[0] - start[0])) 
+                                        * (end[1] - start[1]))))) )
+
+                        break
+
+                    else:
+
+                        xval -= end[0] - start[0]
+
+            # print("Floor:{}\nItems:{}\nAllowed:{}\nChars:{}".format(
+            #     self.floor,
+            #     item_places,
+            #     vectors,
+            #     chars))
+
+            return chars
 
 
         def get_background(self):
 
-            for test in [ k for k in self.tests if k.ref_name == "option" ]:
+            for test in [ k for k in self.tests if k.ref_name == "alt_bg" ]:
 
                 if test.valid:
 
@@ -147,6 +277,24 @@ init 510 python:
                     layers.append(((test.xpos, test.ypos), test.image))
 
             return layers
+
+
+        def get_items(self, valid=True):
+
+            items = []
+
+            for test in [ k for k in self.tests if k.ref_name == "item" ]:
+
+                if not valid or test.valid:
+
+                    items.append( test )
+
+            return items
+
+
+        @property
+        def valid(self):
+            return True
 
 
         def __repr_extra__(self):
@@ -197,11 +345,17 @@ init 510 python:
             return paths
 
 
-        def get_buttons(self):
+        def get_arrows(self, valid=True):
 
-            return [k.get_button() for k in self.tests 
-                    if k.ref_name == "arrow" 
-                    and k.valid]
+            arrows = []
+
+            for test in [ k for k in self.tests if k.ref_name == "arrow" ]:
+
+                if not valid or test.valid:
+
+                    arrows.append( test )
+
+            return arrows
 
 
         def __repr_extra__(self):
@@ -213,10 +367,7 @@ init 510 python:
 
         @property
         def valid(self):
-
             return True
-                #    all( 
-                # [t.valid for t in self.tests if t.ref_name == "path"] ) 
 
 
     class DialogueEvent(LabelLocationCharacterEvent):
@@ -251,90 +402,4 @@ init 510 python:
 
             return all( [ t.valid for t in self.tests ] )
 
-
-    class ItemEvent(LabelLocationCharacterEvent):
-
-        def __init__(self, handler=None, *tests, **kwargs):
-
-            super(ItemEvent, self).__init__(handler, *tests, **kwargs)
-
-            for k,v in {'xpos':100, 'ypos':200, 'image':None}.items():
-
-                if not k in self.__dict__:
-
-                    setattr(self, k, v)
-
-            rest = self.make_location_tests(self.label)
-
-            if not self.image:
-
-                self.image = rest
-
-            pos_values = []
-
-            for arg in self.args:
-
-                if isinstance(arg, (int, float)):
-
-                    pos_values.append(arg)
-
-                elif isinstance(arg, renpy.ast.PyExpr):
-
-                    pos_values.extend(list(renpy.python.py_eval(arg)))
-
-                elif isinstance(arg, basestring):
-
-                    self.image = arg
-
-                else:
-
-                    raise AttributeError, "ItemEvent got an invalid " \
-                                          "argument {}".format(arg)
-
-            if pos_values:
-
-                if len(pos_values) > 2:
-
-                    raise AttributeError, "ItemEvent received too many " \
-                                          "position values"
-
-                self.xpos = pos_values[0]
-
-                if len(pos_values) == 2:
-
-                    self.ypos = pos_values[1]
-
-            if not renpy.loadable(self.image):
-
-                if renpy.loadable("images/items/{}.png".format(self.image)):
-
-                    self.image = "images/items/{}.png".format(self.image)
-
-                else:
-
-                    raise AttributeError, "ItemEvent could not find image " \
-                                          "from {}".format(self.image)
-
-
-        def get_button(self):
-
-            return ImageButton(
-                self.image,
-                clicked=Call(self.label),
-                anchor=(0.5,0.5),
-                pos=(self.xpos, self.ypos))
-
-
-        def __repr_extra__(self):
-
-            return "{} ({}):\n{}".format(
-                self.image,
-                (self.xpos, self.ypos),
-                "\n".join([str(t) for t in self.tests]) )
-
-
-        @property
-        def valid(self):
-
-            return all( [ t.valid for t in self.tests ] ) 
 

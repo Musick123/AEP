@@ -355,7 +355,7 @@ init 510 python:
 
             if label not in self.events:
 
-                # Might be a Nub
+                # Might be a Nub (if it starts with a location)
 
                 locs = [e.label for e in self.location]
 

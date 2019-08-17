@@ -12,12 +12,12 @@
     #
     # Think about ItemEvents having repeat 0 and auto visit
     #
-    # Position characters on screen
-    # All extra screen images (nav buttons, items, characters) should 
-    # be anchored at (0.5, 1.0)
-    # Position speech according to character mouth
+    # Make sure Handler is freshly loaded each init (replicate curtain pin 
+    # error and test)
     #
-    # Make sure Handler is freshly loaded each init ()
+    # Think about integrating with Inventory Items if it makes sense
+    #
+    # Bubble pos should follow sprite if moving
 
 init python:
 
@@ -31,7 +31,9 @@ default current = CurrentState(
     character = "a",
     places = {
         'a' : "theater_south_2"
-    })
+    },
+    sprites = {}, # stores last known location & position of sprites by tag
+    )
 
 define config.automatic_images = [' ', '_', '/']
 define config.automatic_images_strip = ['images','characters']
@@ -40,11 +42,18 @@ define config.quit_action = [ Quit(confirm=False) ]
 
 default persistent.hints = ['events', 'icons']
 
+            ###############################################
+            #                                             #
+            #                Ariane Eldar                 #
+            #                     a                       #
+            #                                             #
+            ###############################################
+
 define character.a = Character(
     "Ariane Eldar", 
     image="ari", 
-    voice_tag="ari",
     screen="cartoon_dialogue",
+    # show_substyle="thought", # this would set her using thought bubbles
     what_style="cartoon_speech_text")
 default a = CharacterStats("a", bag=Inventory(cigarettes=2))
 
@@ -56,6 +65,102 @@ image ari happy = "images/ari/[ari_costume]/happy.png"
 image ari shamed = "images/ari/[ari_costume]/shamed.png"
 image ari shocked = "images/ari/[ari_costume]/shocked.png"
 image ari outdoorsleep = "images/ari/[ari_costume]/outdoorsleep.png"
+
+            ###############################################
+            #                                             #
+            #               Ritchie the Rat               #
+            #                     rr                      #
+            #                                             #
+            ###############################################
+
+define character.rr = Character(
+    "Ritchie the Rat",
+    image="ritchie", 
+    screen="cartoon_dialogue",
+    what_style="cartoon_speech_text")
+default rr = CharacterStats("rr")
+
+image ritchie = "images/ritchie/normal.png"
+
+            ###############################################
+            #                                             #
+            #               MusikMaschinist               #
+            #                     mm                      #
+            #                                             #
+            ###############################################
+
+define character.mm = Character(
+    "MusikMaschinist",
+    image="musik", 
+    screen="cartoon_dialogue",
+    what_style="cartoon_speech_text")
+default mm = CharacterStats("mm")
+
+image musik = "images/mm/normal.png"
+
+            ###############################################
+            #                                             #
+            #                Harrer Potty                 #
+            #                     hp                      #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #               Hilda Wittberg                #
+            #                     hw                      #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #                Jeremy Blunt                 #
+            #                     jb                      #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #                Jenna Saffoe                 #
+            #                     js                      #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #             N The Faceless One              #
+            #                    nf                       #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #               Ossian Moreau                 #
+            #                     om                      #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #                Vestisphagos                 #
+            #                     ve                      #
+            #                                             #
+            ###############################################
+
+
+            ###############################################
+            #                                             #
+            #               Zerberus (dog)                #
+            #                    ze                       #
+            #                                             #
+            ###############################################
+
 
 label start:
 

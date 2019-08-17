@@ -9,8 +9,8 @@
 # have a new path from B back to A (perhaps with different tests) if needed
 
 # Important Note:
-# Label names should include the prefix like _navigation
-# It is stripped off and stored in the NavigationEvent as name
+# Label names should include a suffix like _navigation
+# The prefix is stripped off and stored in the NavigationEvent as location
 
 
             ###############################################
@@ -25,8 +25,12 @@ label junction_1_navigation:
         path 'junction_2' 100
         path 'bridge' 50
         path 'petrol' 50
-        path 'scrap' 100
         path 'farm' 200
+        arrow 'bridge' 'n' 640 50
+        arrow 'junction_2' 's' 640 670
+        arrow 'petrol' 'w'
+        arrow 'farm' 'e' 1230
+
     return
 
 label junction_2_navigation:
@@ -37,7 +41,7 @@ label junction_2_navigation:
         path 'motel' 50
         arrow 'junction_1' 'n' 640 50
         arrow 'junction_3' 's' 640 670
-        arrow 'hifi' 
+        arrow 'hifi'
         arrow 'motel' 'e' 1230
     return
 
@@ -66,6 +70,7 @@ label junction_3_navigation:
 label bridge_navigation:
     event register navigation:
         path 'junction_1' 50
+        arrow 'junction_1' 's' 640 670
     return
 
             ###############################################
@@ -83,6 +88,7 @@ label church_navigation:
             'church_sanctum'
             25
             simp "False" # will be test for bushes removed
+        arrow 'junction_3' 'w'
     return
 
 label church_sanctum_navigation:
@@ -117,6 +123,9 @@ label farm_navigation:
             25
             simp "True" # will be test for opening times
         path 'farm_barn' 25
+        arrow 'junction_1' 'w'
+        arrow 'farm_shop' 'n' 690 600
+        arrow 'farm_barn' 'n' 260 570
     return
 
 label farm_shop_navigation:
@@ -127,18 +136,23 @@ label farm_shop_navigation:
             'farm_bedroom'
             25
             simp "False" # test allowed
+        arrow 'farm' 's' 640 670
+        arrow 'farm_bedroom' 'n' 690 100
+
     return
 
 label farm_barn_navigation:
     event register navigation:
         on_map ["farm"]
         path 'farm' 25
+        arrow 'farm' 's' 640 670
     return
 
 label farm_bedroom_navigation:
     event register navigation:
         on_map ["farm"]
         path 'farm_shop' 25
+        arrow 'farm_shop' 's' 640 670
     return
 
 
@@ -152,6 +166,7 @@ label forest_navigation:
     event register navigation:
         path 'church' 50
         path 'junction_3' 100
+        arrow 'junction_3' 's' 640 670
     return
 
             ###############################################
@@ -168,6 +183,8 @@ label hifi_navigation:
             'hifi_shop'
             25
             simp "True" # will be various tests
+        arrow 'junction_2' 'e' 1230
+
     return
 
 label hifi_shop_navigation:
@@ -235,13 +252,120 @@ label motel_navigation:
         on_map ["town","motel"]
         path 'junction_2' 50
         path 'motel_lobby' 25
+        arrow 'junction_2' 'w'
+        arrow 'motel_lobby' 'n' 230 200
     return
 
 label motel_lobby_navigation:
     event register navigation:
         on_map ["motel"]
         path 'motel' 25
+        path 'motel_hall_1' 25
+        arrow 'motel' w
+        arrow 'motel_hall_1' 'e' 1230
     return
+
+label motel_hall_1_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_lobby' 25
+        path 'motel_hall_2' 25
+        path 'motel_room_1'
+        arrow 'motel_lobby' 'w'
+        arrow 'motel_hall_2' 'e' 1230
+        arrow 'motel_room_1' 'n' 580 260
+
+label motel_hall_2_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_1' 25
+        path 'motel_hall_3' 25
+        path 'motel_room_2'
+        arrow 'motel_hall_1' 'w'
+        arrow 'motel_hall_3' 'e' 1230
+        arrow 'motel_room_2' 'n' 580 260
+
+label motel_hall_3_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_2' 25
+        path 'motel_hall_4' 25
+        path 'motel_room_3'
+        arrow 'motel_hall_2' 'w'
+        arrow 'motel_hall_4' 'e' 1230
+        arrow 'motel_room_3' 'n' 580 260
+
+label motel_hall_4_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_3' 25
+        path 'motel_hall_5' 25
+        path 'motel_room_4'
+        arrow 'motel_hall_3' 'w'
+        arrow 'motel_hall_5' 'e' 1230
+        arrow 'motel_room_4' 'n' 580 260
+
+label motel_hall_5_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_4' 25
+        path 'motel_hall_6' 25
+        path 'motel_room_5'
+        arrow 'motel_hall_4' 'w'
+        arrow 'motel_hall_6' 'e' 1230
+        arrow 'motel_room_5' 'n' 580 260
+
+label motel_hall_6_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_5' 25
+        path 'motel_shower' 25
+        path 'motel_room_6'
+        arrow 'motel_hall_5' 'w'
+        arrow 'motel_shower' 'e' 1230
+        arrow 'motel_room_6' 'n' 580 260
+
+label motel_room_1_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_1' 25
+        arrow 'motel_hall_1' 's' 640 670
+
+label motel_room_2_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_2' 25
+        arrow 'motel_hall_2' 's' 640 670
+
+label motel_room_3_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_3' 25
+        arrow 'motel_hall_3' 's' 640 670
+
+label motel_room_4_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_4' 25
+        arrow 'motel_hall_4' 's' 640 670
+
+label motel_room_5_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_5' 25
+        arrow 'motel_hall_5' 's' 640 670
+
+label motel_room_6_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_6' 25
+        arrow 'motel_hall_6' 's' 640 670
+
+label motel_shower_navigation:
+    event register navigation:
+        on_map ["motel"]
+        path 'motel_hall_6' 25
+        arrow 'motel_hall_6' 'w'
 
 # TODO: Motel sub rooms
 
@@ -249,7 +373,7 @@ label motel_lobby_navigation:
             #                                             #
             #             The Petrol Station              #
             #                                             #
-            ############################################### 
+            ###############################################
 
 label petrol_navigation:
     event register navigation:
@@ -260,6 +384,9 @@ label petrol_navigation:
             'petrol_shop'
             25
             simp "True" # will be test for opening times etc
+        arrow 'junction_1' 'e' 1230
+        arrow 'scrap' 'n' 1150 400
+        arrow 'petrol_shop' 'n' 600 500
     return
 
 label petrol_shop_navigation:
@@ -268,6 +395,8 @@ label petrol_shop_navigation:
         path 'petrol' 25
         path 'petrol_toilet' 25
         path 'petrol_storage' 25
+        arrow 'petrol' 's' 670 640
+        arrow 'petrol_storage' 'n' 290 250
     return
 
 label petrol_toilet_navigation:
@@ -280,6 +409,7 @@ label petrol_storage_navigation:
     event register navigation:
         on_map ["petrol"]
         path 'petrol_shop' 25
+        arrow 'petrol_shop' 'w' 300 250
     return
 
             ###############################################
@@ -292,7 +422,7 @@ label scrap_navigation:
     event register navigation:
         on_map "petrol"
         path 'petrol' 50
-        path 'junction_1' 50
+        arrow 'petrol' 's' 670 640
     return
 
             ###############################################
@@ -318,7 +448,7 @@ label theater_north_1_navigation:
         path 'theater' 25
         path 'theater_north_2' 25
         path:
-            'theater_backstage' 
+            'theater_backstage'
             25
             inventory "theater_backstage_key"
         arrow 'theater' 'sw' 50 450
@@ -332,7 +462,7 @@ label theater_north_2_navigation:
         path 'theater_north_1' 25
         path 'theater_north_3' 25
         path:
-            'theater_stage' 
+            'theater_stage'
             25
             inventory "theater_stage_key"
         arrow 'theater_north_1'
@@ -390,8 +520,8 @@ label theater_stage_navigation:
         path 'theater_backstage' 25
         path 'theater_audience' 25
         path:
-            'theater_north_2' 
-            25            
+            'theater_north_2'
+            25
             inventory "theater_stage_key"
         arrow 'theater_backstage' 'n' 900 300
         arrow 'theater_audience' 's' 640 670
@@ -404,11 +534,11 @@ label theater_backstage_navigation:
         path 'theater_storage' 25
         path 'theater_stage' 25
         path:
-            'theater_north_1' 
+            'theater_north_1'
             25
             inventory "theater_backstage_key"
-        arrow 'theater_storage' 'n' 200 250
-        arrow 'theater_stage' 'e' 1230
+        arrow 'theater_stage' 'w'
+        arrow 'theater_storage' 'e' 1230
         arrow 'theater_north_1' 's' 640 670
     return
 
@@ -429,9 +559,13 @@ label villa_navigation:
     event register navigation:
         on_map ["town","villa"]
         path:
-            'villa_parking' 
+            'villa_parking'
             25
             simp "False" # will be test for illusion removed
+        path 'junction_3' 100
+        path 'villa_wall' 20
+        arrow 'junction_3' 'w'
+        arrow 'villa_wall' 'e' 1230
     return
 
 label villa_parking_navigation:
@@ -445,10 +579,13 @@ label villa_wall_navigation:
     event register navigation:
         on_map ["villa"]
         path 'villa_parking' 25
+        path 'villa' 25
+        path 'villa_wall' 25
         path:
-            'villa_pool' 
+            'villa_pool'
             25
             simp "False" # will be test hole drilled and char is rat
+        arrow 'villa' w
     return
 
 label villa_pool_navigation:
