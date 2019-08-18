@@ -1,5 +1,4 @@
 # Dialogue Labels
-# (will likely be separated into different files per person)
 
 # These generally have:
     # A location (where it happens)
@@ -9,20 +8,6 @@
 # The location and initiator are taken from the label name if not 
 # expressly set. All dialogue is automatic if conditions are met unless
 # auto is set to False
-
-    # label location_character_otherchar_unique:
-    #     event register dialogue:
-    #         locations "cat" "dog"
-    #         characters "yet_another_char"
-    #         repeat 1
-
-    # label character_otherchar_unique:
-    #     event register dialogue:
-    #         "location_1"
-    #         "location_2"
-    #         repeat 1
-
-
 
 
 label theater_south_2_a_waking_up:
@@ -48,20 +33,27 @@ label theater_a_first_visit:
         
     return
 
-label theater_north_1_a_first_visit:
+
+label theater_audience_a_first_visit:
     event register dialogue:
         pass
 
-    a "Pffft, that's not hugely-huge helpful. Some bollock has locked this door."
-
+    a "A little robot"
+        
     return
 
-label theater_north_2_a_first_visit:
-    event register dialogue:
-        pass
+# label theater_north_1_a_first_visit:
+#     event register dialogue:
+#         pass
 
-    a "Another locked door... pffft."
+#     a ""
 
-    a "Shoggoth-poo, I'm pretty-pretty sure I had the keys last night."
+#     return
 
-    return
+# label theater_north_2_a_first_visit:
+#     event register dialogue:
+#         pass
+
+#     a ""
+
+#     return

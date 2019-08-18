@@ -18,6 +18,11 @@
     # Think about integrating with Inventory Items if it makes sense
     #
     # Bubble pos should follow sprite if moving
+    #
+    # Character Sprites as DynamicDisplayables using tag attributes 
+    # and Stat based states (sleep/trapped/depressed/uniform etc)
+    #
+    # Add more Layers
 
 init python:
 
@@ -30,7 +35,9 @@ default current = CurrentState(
     location = "theater_south_2",
     character = "a",
     places = {
-        'a' : "theater_south_2"
+        'a' : "theater_south_2",
+        'rr' : "theater_storage",
+        'mm' : "theater_audience",
     },
     sprites = {}, # stores last known location & position of sprites by tag
     )
@@ -81,6 +88,7 @@ define character.rr = Character(
 default rr = CharacterStats("rr")
 
 image ritchie = "images/ritchie/normal.png"
+image ritchie trapped = "images/ritchie/trapped.png"
 
             ###############################################
             #                                             #

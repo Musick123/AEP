@@ -10,6 +10,7 @@ init 510 python:
             Get location(s) from label name and make tests
             church_ari_mus_convo => ['church'], 'ari_mus_convo'
             """
+
             if not label_str:
 
                 label_str = self.label
@@ -43,7 +44,7 @@ init 510 python:
 
                 self.tests.append(LocationTest(self, args=locations))
 
-            return label_str.strip('_')
+            return rest.strip('_')
 
 
         def get_chars_rest(self, label_str=None):
@@ -87,7 +88,7 @@ init 510 python:
 
                 self.tests.append(CharacterTest(self, args=chars))
 
-            return label_str.strip('_')
+            return rest.strip('_')
 
 
 

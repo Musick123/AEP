@@ -249,7 +249,7 @@ init 510 python:
 
         def __repr_extra__(self):
 
-            return "Valid if label has been visited upto {} times: {}".format(
+            return "Valid if label has been repeated upto {} times: {}".format(
                 self.args[0], self.visits )
 
 
@@ -761,6 +761,10 @@ init 510 python:
                 current.places.get(k, None) == current.location 
                 for k in self.args])
 
+        def __repr_extra__(self):
+
+            return "Valid if all characters {} are here".format(self.args)
+
 
     class InventoryTest(BaseTest):
         """
@@ -776,3 +780,7 @@ init 510 python:
             return all([
                 k in globals()[current.character].bag.items
                 for k in self.args])
+
+        def __repr_extra__(self):
+
+            return "Valid if all items {} are held".format(self.args)

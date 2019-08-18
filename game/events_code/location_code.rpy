@@ -41,8 +41,16 @@ init python:
 
             start_pos = last_pos[1]
 
+        tag_and_attrs = tag
+
+        attribs = renpy.get_attributes(tag)
+
+        if attribs:
+
+            tag_and_attrs = "{} {}".format(tag, " ".join(attribs))
+
         renpy.show(
-                tag,
+                tag_and_attrs,
                 at_list=[ move_char_to( tag, start_pos, char[1] ) ] )
 
 
@@ -117,8 +125,6 @@ label enter_location:
         items = loc_events[0].get_items()
 
         chars = loc_events[0].get_chars(arrows)
-
-        # char_positions = []
 
         auto_dialogues = [k for k in eh.dialogue if k.auto]
 

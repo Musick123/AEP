@@ -434,7 +434,10 @@ label scrap_navigation:
 label theater_navigation:
     event register navigation:
         on_map ["town","theater"]
-        path 'junction_3' 100
+        path:
+            'junction_3' 
+            100
+            seen "theater_storage_a_first_visit"
         path 'theater_north_1' 25
         path 'theater_south_3' 25
         arrow 'junction_3' 'e' 1230
@@ -447,10 +450,7 @@ label theater_north_1_navigation:
         on_map ["theater"]
         path 'theater' 25
         path 'theater_north_2' 25
-        path:
-            'theater_backstage'
-            25
-            inventory "theater_backstage_key"
+        path 'theater_backstage' 25
         arrow 'theater' 'sw' 50 450
         arrow 'theater_north_2' 'e' 1230
         arrow 'theater_backstage' 'n' 630 360
@@ -461,10 +461,7 @@ label theater_north_2_navigation:
         on_map ["theater"]
         path 'theater_north_1' 25
         path 'theater_north_3' 25
-        path:
-            'theater_stage'
-            25
-            inventory "theater_stage_key"
+        path 'theater_stage' 25
         arrow 'theater_north_1'
         arrow 'theater_north_3' 'e' 1230
         arrow 'theater_stage' 'n' 300
@@ -519,10 +516,7 @@ label theater_stage_navigation:
         on_map ["theater"]
         path 'theater_backstage' 25
         path 'theater_audience' 25
-        path:
-            'theater_north_2'
-            25
-            inventory "theater_stage_key"
+        path 'theater_north_2' 25
         arrow 'theater_backstage' 'n' 900 300
         arrow 'theater_audience' 's' 640 670
         arrow 'theater_north_2'
@@ -533,10 +527,7 @@ label theater_backstage_navigation:
         on_map ["theater"]
         path 'theater_storage' 25
         path 'theater_stage' 25
-        path:
-            'theater_north_1'
-            25
-            inventory "theater_backstage_key"
+        path 'theater_north_1' 25
         arrow 'theater_stage' 'w'
         arrow 'theater_storage' 'e' 1230
         arrow 'theater_north_1' 's' 640 670

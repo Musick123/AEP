@@ -4,8 +4,10 @@
 # These are the labels that we Jump to when we enter a new locations
 
 # Used to define:
+    # Background and layers
     # Available positions for sprites (floor sections)
     # Positions for any random items
+    # Items
 
 # These are NOT expected to contain tests
 
@@ -333,12 +335,12 @@ label theater_backstage:
 label theater_storage:
     event register location:
         floor [((100,670), (760,670))]
-        item:
-            "key_theater_stage_idle" 250 100 "theater_storage_key_1"
-            unseen "theater_storage_key_1"
-        item:
-            "key_theater_backstage_idle" 450 100 "theater_storage_key_2"
-            unseen "theater_storage_key_2"
+        # item:
+        #     "key_theater_stage_idle" 250 100 "theater_storage_key_1"
+        #     unseen "theater_storage_key_1"
+        # item:
+        #     "key_theater_backstage_idle" 450 100 "theater_storage_key_2"
+        #     unseen "theater_storage_key_2"
     return
 
             ###############################################
