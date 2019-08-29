@@ -29,7 +29,7 @@ label theater_a_first_visit:
     event register dialogue:
         pass
 
-    a "Looks like all the cars are gone"
+    a "Looks like all the cars are gone."
         
     return
 
@@ -38,7 +38,7 @@ label theater_audience_a_first_visit:
     event register dialogue:
         pass
 
-    a "A little robot"
+    a "MusikMaschinist! At least you've stayed here."
         
     return
 
