@@ -38,7 +38,7 @@ label theater_audience_a_first_visit:
     event register dialogue:
         pass
 
-    a "MusikMaschinist! At least you've stayed here."
+    a happy "MusikMaschinist! At least you've stayed here."
         
     return
 
