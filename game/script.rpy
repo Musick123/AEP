@@ -45,14 +45,25 @@ default current = CurrentState(
 define config.automatic_images = [' ', '_', '/']
 define config.automatic_images_strip = ['images','characters']
 
+define config.report_extraneous_attributes = False
+
 define config.quit_action = [ Quit(confirm=False) ]
 
-default persistent.hints = ['events', 'icons']
+# default persistent.hints = ['events', 'icons']
+
+            ###############################################
+            #                                             #
+            #                   Name                      #
+            #                 reference                   #
+            #            tag / images folder              #
+            #                                             #
+            ###############################################
 
             ###############################################
             #                                             #
             #                Ariane Eldar                 #
             #                     a                       #
+            #                    ari                      #
             #                                             #
             ###############################################
 
@@ -62,21 +73,26 @@ define character.a = Character(
     screen="cartoon_dialogue",
     # show_substyle="thought", # this would set her using thought bubbles
     what_style="cartoon_speech_text")
-default a = CharacterStats("a", bag=Inventory(cigarettes=2))
 
-default ari_costume = "dress"
+default a = CharacterStats(
+    "a",
+    state=None,
+    outfit="dress", 
+    bag=Inventory(cigarettes=2))
 
-image ari = "images/ari/[ari_costume]/normal.png"
-image ari angry = "images/ari/[ari_costume]/angry.png"
-image ari happy = "images/ari/[ari_costume]/happy.png"
-image ari shamed = "images/ari/[ari_costume]/shamed.png"
-image ari shocked = "images/ari/[ari_costume]/shocked.png"
-image ari outdoorsleep = "images/ari/[ari_costume]/outdoorsleep.png"
+image ari = DynamicSprite("a")
+#"images/ari/[current.outfit]/normal.png"
+# image ari angry = Solid('#000')#"images/ari/[current.outfit]/angry.png"
+# image ari happy = "images/ari/[current.outfit]/happy.png"
+# image ari shamed = "images/ari/[current.outfit]/shamed.png"
+# image ari shocked = "images/ari/[current.outfit]/shocked.png"
+# image ari outdoorsleep = "images/ari/[current.outfit]/outdoorsleep.png"
 
             ###############################################
             #                                             #
             #               Ritchie the Rat               #
             #                     rr                      #
+            #                  ritchie                    #
             #                                             #
             ###############################################
 
@@ -85,15 +101,20 @@ define character.rr = Character(
     image="ritchie", 
     screen="cartoon_dialogue",
     what_style="cartoon_speech_text")
-default rr = CharacterStats("rr")
 
-image ritchie = "images/ritchie/normal.png"
-image ritchie trapped = "images/ritchie/trapped.png"
+default rr = CharacterStats(
+    "rr",
+    state="trapped")
+
+image ritchie = DynamicSprite('rr')
+# "images/ritchie/normal.png"
+# image ritchie trapped = "images/ritchie/trapped.png"
 
             ###############################################
             #                                             #
             #               MusikMaschinist               #
             #                     mm                      #
+            #                    musik                    #
             #                                             #
             ###############################################
 
@@ -102,14 +123,17 @@ define character.mm = Character(
     image="musik", 
     screen="cartoon_dialogue",
     what_style="cartoon_speech_text")
+
 default mm = CharacterStats("mm")
 
-image musik = "images/mm/normal.png"
+image musik = DynamicSprite("mm")
+# "images/musik/normal.png"
 
             ###############################################
             #                                             #
             #                Harrer Potty                 #
             #                     hp                      #
+            #                   harrer                    #
             #                                             #
             ###############################################
 
@@ -118,6 +142,7 @@ image musik = "images/mm/normal.png"
             #                                             #
             #               Hilda Wittberg                #
             #                     hw                      #
+            #                   hilda                     #
             #                                             #
             ###############################################
 
@@ -169,9 +194,9 @@ image musik = "images/mm/normal.png"
             #                                             #
             ###############################################
 
-
 label start:
 
     jump expression current.location
 
     return
+      

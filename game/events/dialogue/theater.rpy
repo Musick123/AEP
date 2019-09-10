@@ -14,12 +14,16 @@ label theater_south_2_a_waking_up:
     event register dialogue:
         pass
 
-    show ari: # On this one we put her at a set place on screen
-        pos (410,710)
+    $ a.state = 'outdoorsleep'
 
-    a outdoorsleep "Uh-oooh"
+    show ari: # On this one we put her at a set place on screen
+        pos (410,700)
+
+    a "Uh-oooh"
 
     a "Where am I? Ohh, I recall I went for little witches..." 
+
+    $ a.state = None
     
     a angry "Is the party over? It is all silent... Pfft, let's have a look."
         

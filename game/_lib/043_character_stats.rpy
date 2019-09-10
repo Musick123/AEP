@@ -12,11 +12,12 @@ init python:
         STORE_PREFIX = "character_stats"
 
         # Boolean toggle for validation - defaults both True
-        # VALIDATE_VALUES = False
-        # COERCE_VALUES = False
+        VALIDATE_VALUES = False
+        COERCE_VALUES = False
 
         STAT_DEFAULTS = {
-            'location' : "nowhere",
+            'state' : None,
+            'outfit' : None, 
             'energy' : 10000,
             'mood' : 10,
             'generosity' : 0,
