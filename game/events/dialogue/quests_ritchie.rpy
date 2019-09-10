@@ -29,7 +29,7 @@ label theater_storage_a_free_ritchie:
         pos (690, 650)
 
     a "Ritchie! I have a crowbar. 
-        \nThis should do to open that nice cage you call home. 
+        \nThis should do to open that nice-nice cage you call home. 
         \nJust one moment"
 
     rr "Freedom! You may like it in a cage, I do not."
@@ -45,8 +45,8 @@ label theater_storage_a_rr_ritchietool:
 
     rr "I'm free. I owe you one Ariane. Is there anything you need?"
 
-    a "Well, Ritchie, could you break into the backstage wardrobe for me? 
-        Most of my lovely costumes are in there and some tard has locked it"
+    a "Pffft, you could break into the backstage wardrobe for me. 
+        Most of my lovely-lovely costumes are in there and some bollock has locked it."
 
     rr "To manage that, I'd need the great and wonderful RitchieTool"
 
