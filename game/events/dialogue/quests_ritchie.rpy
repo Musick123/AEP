@@ -50,10 +50,12 @@ label theater_storage_a_rr_ritchietool:
 
     rr "To manage that, I'd need the great and wonderful RitchieTool"
 
-    a "The what? Where can we get one?"
+    a "Pfft, the what? Where can we get one?"
 
-    rr "The great and wonderful RitchieTool ... etc etc conversation"
+    rr "The great and wonderful RitchieTool ...I can built it myself."
+    
+    rr "I just need something like a wire and a car antenna."
 
-    a "So, a quest to make a tool, yay"
+    a "Pfffft, a quest to make a tool, spank me."
 
     return
