@@ -4,3 +4,6 @@ label bridge_a_first_visit:
 
       a "Shoggoth-poo, the bridge is blocked!"
       a "There must be something really weird-weird going on here. spank me!"
+
+return
+      
